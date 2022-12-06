@@ -6,6 +6,7 @@ from tensorflow.keras.optimizers import RMSprop
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
+import pickle
 import cv2
 import os
 
@@ -57,13 +58,13 @@ model = tf.keras.models.Sequential(
 model.compile(loss= 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Train model
-model_fit = model.fit(train_dataset, steps_per_epoch=3, epochs=8, validation_data=validate_dataset) # Epoch is the number of iterations to run compile model
+model_fit = model.fit(train_dataset, steps_per_epoch=3, epochs=7, validation_data=validate_dataset) # Epoch is the number of iterations to run compile model
 
 # Test model classification 
 dir_path = "yohan\\test"
 
 
-img = image.load_img("yohan\\test\\Five Thousand Rupee Fake.jpg", target_size=(200,200))
+img = image.load_img("yohan\\test\\Five Thousand Rupee Real.jpg", target_size=(200,200))
 
 X = image.img_to_array(img)
 X = np.expand_dims(X, axis=0)
@@ -71,7 +72,7 @@ images = np.vstack([X])
 val = model.predict(images)
 
 
-## In validate_dataset.class_indices Fake = 0, and Real = 500
+## In validate_dataset.class_indices Fake = 0, and Real = 1
 if val == 0:
     print(f"Fake")
 else:
