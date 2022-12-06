@@ -27,6 +27,7 @@ validate_dataset = train.flow_from_directory(
     class_mode="binary"
 )
 
+print(validate_dataset.class_indices)
 
 # Create model
 model = tf.keras.models.Sequential(
@@ -56,22 +57,23 @@ model = tf.keras.models.Sequential(
 model.compile(loss= 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Train model
-model_fit = model.fit(train_dataset, steps_per_epoch=3, epochs=30, validation_data=validate_dataset) # Epoch is the number of iterations to run compile model
+model_fit = model.fit(train_dataset, steps_per_epoch=3, epochs=8, validation_data=validate_dataset) # Epoch is the number of iterations to run compile model
 
 # Test model classification 
 dir_path = "yohan\\test"
 
-for i in os.listdir(dir_path):
-    img = image.load_img(dir_path+"\\"+i, target_size=(200,200))
-    
-    X = image.img_to_array(img)
-    X = np.expand_dims(X, axis=0)
-    images = np.vstack([X])
-    val = model.predict(images)
 
-    ## In validate_dataset.class_indices 1000 = 0, and i = 500
-    if val == 0:
-        print(f"{i} = 1000")
-    else:
-        print(f"{i} = 500")
+img = image.load_img("yohan\\test\\Five Thousand Rupee Fake.jpg", target_size=(200,200))
+
+X = image.img_to_array(img)
+X = np.expand_dims(X, axis=0)
+images = np.vstack([X])
+val = model.predict(images)
+
+
+## In validate_dataset.class_indices Fake = 0, and Real = 500
+if val == 0:
+    print(f"Fake")
+else:
+    print(f"Real")
         
