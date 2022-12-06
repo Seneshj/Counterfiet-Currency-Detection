@@ -58,7 +58,11 @@ model = tf.keras.models.Sequential(
 model.compile(loss= 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Train model
-model_fit = model.fit(train_dataset, steps_per_epoch=3, epochs=7, validation_data=validate_dataset) # Epoch is the number of iterations to run compile model
+model_fit = model.fit(
+    train_dataset, 
+    steps_per_epoch=3, 
+    epochs=7, 
+    validation_data=validate_dataset) # Epoch is the number of iterations to run compile model
 
 # Test model classification 
 dir_path = "yohan\\test"
