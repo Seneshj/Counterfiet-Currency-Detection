@@ -10,57 +10,68 @@ import cv2
 import os
 
 
-# train = ImageDataGenerator(rescale=1/255)
-# validation =  ImageDataGenerator(rescale=1/255)
+train = ImageDataGenerator(rescale=1/255)
+validation =  ImageDataGenerator(rescale=1/255)
 
-# train_dataset = train.flow_from_directory(
-#     "yohan\\train", 
-#     target_size=(200,200), 
-#     batch_size = 3,   
-#     class_mode="binary"
-# )
+train_dataset = train.flow_from_directory(
+    "yohan\\train", 
+    target_size=(200,200), 
+    batch_size = 3,   
+    class_mode="binary"
+)
 
-# validate_dataset = train.flow_from_directory(
-#     "yohan\\validate", 
-#     target_size=(200,200), 
-#     batch_size = 3, 
-#     class_mode="binary"
-# )
+validate_dataset = train.flow_from_directory(
+    "yohan\\validate", 
+    target_size=(200,200), 
+    batch_size = 3, 
+    class_mode="binary"
+)
 
-# # Create model
-# model = tf.keras.models.Sequential(
-#     [
-#         # Layer1
-#         tf.keras.layers.Conv2D(filters=16, kernel_size=(3,3), activation='relu', input_shape=(200,200,3)), 
-#         tf.keras.layers.MaxPool2D(pool_size=2, strides=2), # MaxPool takes the max pixel out of given pixels
 
-#         # Layer2
-#         tf.keras.layers.Conv2D(filters=32, kernel_size=(3,3), activation='relu'), 
-#         tf.keras.layers.MaxPool2D(pool_size=2, strides=2),
+# Create model
+model = tf.keras.models.Sequential(
+    [
+        # Layer1
+        tf.keras.layers.Conv2D(filters=16, kernel_size=(3,3), activation='relu', input_shape=(200,200,3)), 
+        tf.keras.layers.MaxPool2D(pool_size=2, strides=2), # MaxPool takes the max pixel out of given pixels
 
-#         # Layer3
-#         tf.keras.layers.Conv2D(filters=64, kernel_size=(3,3), activation='relu'), 
-#         tf.keras.layers.MaxPool2D(pool_size=2, strides=2),
+        # Layer2
+        tf.keras.layers.Conv2D(filters=32, kernel_size=(3,3), activation='relu'), 
+        tf.keras.layers.MaxPool2D(pool_size=2, strides=2),
 
-#         # Flatten
-#         tf.keras.layers.Flatten(),
+        # Layer3
+        tf.keras.layers.Conv2D(filters=64, kernel_size=(3,3), activation='relu'), 
+        tf.keras.layers.MaxPool2D(pool_size=2, strides=2),
 
-#         # Apply 2 dense layers
-#         tf.keras.layers.Dense(512, activation='relu'),
-#         tf.keras.layers.Dense(1, activation='sigmoid'), # sigmoid becuase program is binary (500 or 1000)
-#     ]
-# )
+        # Flatten
+        tf.keras.layers.Flatten(),
 
-# # Compile model
-# model.compile(loss= 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+        # Apply 2 dense layers
+        tf.keras.layers.Dense(512, activation='relu'),
+        tf.keras.layers.Dense(1, activation='sigmoid'), # sigmoid becuase program is binary (500 or 1000)
+    ]
+)
 
-# # Train model
-# model_fit = model.fit(train_dataset, steps_per_epoch=3, epochs=10, validation_data=validate_dataset) # Epoch is the number of iterations to run compile model
+# Compile model
+model.compile(loss= 'binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# Train model
+model_fit = model.fit(train_dataset, steps_per_epoch=3, epochs=30, validation_data=validate_dataset) # Epoch is the number of iterations to run compile model
 
 # Test model classification 
 dir_path = "yohan\\test"
 
 for i in os.listdir(dir_path):
-    img = image.load_img(dir_path+'\\'+i)
-    plt.imshow(img)
-    plt.show()
+    img = image.load_img(dir_path+"\\"+i, target_size=(200,200))
+    
+    X = image.img_to_array(img)
+    X = np.expand_dims(X, axis=0)
+    images = np.vstack([X])
+    val = model.predict(images)
+
+    ## In validate_dataset.class_indices 1000 = 0, and i = 500
+    if val == 0:
+        print(f"{i} = 1000")
+    else:
+        print(f"{i} = 500")
+        
