@@ -66,7 +66,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 # model.save_weights("model_weights.h5")
 
 # Test model classification
-dir_path = "..\\Dataset\\test"
+dir_path = "../DataSet/test"
 
 img = image.load_img("..\\Dataset\\test\\Five Thousand Rupee Fake.jpg", target_size=(200, 200))
 
