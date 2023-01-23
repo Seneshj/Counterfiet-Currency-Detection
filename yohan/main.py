@@ -1,4 +1,4 @@
-# -- This is yohans work space --
+# -- This is Yohan's work space --
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.preprocessing import image
@@ -13,14 +13,14 @@ train = ImageDataGenerator(rescale=1 / 255)
 validation = ImageDataGenerator(rescale=1 / 255)
 
 train_dataset = train.flow_from_directory(
-    "train",
+    "..\\Dataset\\train",
     target_size=(200, 200),
     batch_size=3,
     class_mode="binary"
 )
 
 validate_dataset = train.flow_from_directory(
-    "validate",
+    "..\\Dataset\\validate",
     target_size=(200, 200),
     batch_size=3,
     class_mode="binary"
@@ -55,24 +55,31 @@ model = tf.keras.models.Sequential(
 # Compile model
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Train model
-model_fit = model.fit(
-    train_dataset,
-    steps_per_epoch=3,
-    epochs=7,
-    validation_data=validate_dataset)  # Epoch is the number of iterations to run compile model
+# # Train model
+# model_fit = model.fit(
+#     train_dataset,
+#     steps_per_epoch=3,
+#     epochs=7,
+#     validation_data=validate_dataset)
+#
+# # Save the weights
+# model.save_weights("model_weights.h5")
 
-# Test model classification 
-dir_path = "test"
+# Test model classification
+dir_path = "..\\Dataset\\test"
 
-img = image.load_img("test\\Five Thousand Rupee Real.jpg", target_size=(200, 200))
+img = image.load_img("..\\Dataset\\test\\Five Thousand Rupee Fake.jpg", target_size=(200, 200))
 
 X = image.img_to_array(img)
 X = np.expand_dims(X, axis=0)
 images = np.vstack([X])
+
+# Load the weights
+model.load_weights("model_weights.h5")
+
 val = model.predict(images)
 
-## In validate_dataset.class_indices Fake = 0, and Real = 1
+# In validate_dataset.class_indices Fake = 0, and Real = 1
 if val == 0:
     print(f"Fake")
 else:
