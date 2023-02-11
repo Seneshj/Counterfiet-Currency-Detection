@@ -237,3 +237,4 @@ for folder in ['20','50','100','500','1000','5000']:
                         img[i][j] = [255, 255, 255]
 
         cv2.imwrite(os.path.join('cropped', folder, file), img)
+# fff
