@@ -230,7 +230,6 @@ for folder in ['20','50','100','500','1000','5000']:
 
         if yhat[0] > 0.5:
             # Controls the main rectangle
-
             for i in range(512):
                 for j in range(512):
                     if (i + 20 < sample_coords[1] * 512 or i - 20 > sample_coords[3] * 512) or (
