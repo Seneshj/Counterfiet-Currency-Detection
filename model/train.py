@@ -92,4 +92,4 @@ plt.ylabel("Loss")
 plt.legend(["Train", "Validation"], loc="upper left")
 plt.show()
 
-model.save("C:\\Users\\yohan\\OneDrive\\Desktop\\models\\InceptionV3_512_32-new-v1.1.h5")
+#model.save("C:\\Users\\yohan\\OneDrive\\Desktop\\models\\InceptionV3_512_32-new-v1.1.h5")
