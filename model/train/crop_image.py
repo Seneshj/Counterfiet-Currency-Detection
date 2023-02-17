@@ -214,3 +214,26 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
 model.fit(train, epochs=10, validation_data=val, callbacks=[tensorboard_callback])
 
 model.save('crop.h5')
+
+from tensorflow.keras.models import load_model
+
+model = load_model('crop.h5')
+
+
+for folder in ['20','50','100','500','1000','5000']:
+    for file in os.listdir(os.path.join('dataset', folder)):
+        img = cv2.imread(os.path.join('dataset', folder, file))
+        rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        resized = tf.image.resize(rgb, (120, 120))
+        yhat = tf.predict(np.expand_dims(resized / 255, 0))
+        sample_coords = yhat[1][0]
+
+        if yhat[0] > 0.5:
+            # Controls the main rectangle
+            for i in range(512):
+                for j in range(512):
+                    if (i + 20 < sample_coords[1] * 512 or i - 20 > sample_coords[3] * 512) or (
+                            j + 20 < sample_coords[0] * 512 or j - 20 > sample_coords[2] * 512):
+                        img[i][j] = [255, 255, 255]
+
+        cv2.imwrite(os.path.join('cropped', folder, file), img)

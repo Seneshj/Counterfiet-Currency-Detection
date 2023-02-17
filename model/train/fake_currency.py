@@ -7,7 +7,7 @@ train = ImageDataGenerator(rescale=1 / 255)
 validation = ImageDataGenerator(rescale=1 / 255)
 
 train_dataset = train.flow_from_directory(
-    "..\\Dataset\\train",
+    "..\\Dataset\\train.py",
     target_size=(200, 200),
     batch_size=3,
     class_mode="binary"
