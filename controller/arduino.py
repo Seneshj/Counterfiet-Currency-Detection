@@ -1,11 +1,20 @@
 import serial
+import time
 
-ser = serial.Serial('COM6', 9600)  # open serial port
+# Define the serial port and baud rate for the Arduino
+ser = serial.Serial('COM6', 9600, timeout=1)
 
+# Wait for the Arduino to initialize
+time.sleep(2)
 
-def on_uv_light():
-    ser.write(b'1')  # send '1' over serial to turn on LED
+while True:
+    # Read the value from the serial port and print it to the console
+    ldrValue = ser.readline().decode('utf-8').rstrip()
+    print("LDR value: ", ldrValue)
 
-
-def off_uv_light():
-    ser.write(b'0')
+    # Check for keyboard input and send command to Arduino
+    command = input("Enter command: ")
+    if command == 's':
+        ser.write(b's')
+    elif command == 'x':
+        ser.write(b'x')
