@@ -1,8 +1,6 @@
 # This is a class to classify 6 classes of images using the CNN architecture (Inception-V3)
 
 import tensorflow as tf
-import numpy as np
-import tensorflow.keras.backend as K
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import InceptionV3
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout, BatchNormalization

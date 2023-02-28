@@ -1,41 +1,101 @@
 from keras.models import load_model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import pyttsx3
+import cv2
+import pandas as pd
 import numpy as np
 
+# Initialize the camera
+print(">> Getting the camera ready >>")
+cap = cv2.VideoCapture(0)
+
+print(">> Loading model >>")
 # Load the saved models
-model = load_model("../model/weights/InceptionV3_512_32-new-v1.1.h5")
+model = load_model("C:\\Users\\yohan\\OneDrive\\Desktop\\models\\latest_inceptionv3.h5")
 
-# Define the path to the validation dataset
-validation_path = "C:\\Users\\yohan\\OneDrive\\Desktop\\split_dataset\\validate"
 
-# Define the data generator for validation data
-validation_datagen = ImageDataGenerator(rescale=1./255)
+def voice_out(phrase):
+    # Initialize the engine
+    engine = pyttsx3.init()
 
-validation_generator = validation_datagen.flow_from_directory(
-    validation_path,
-    target_size=(512, 512),
-    batch_size=32,
-    class_mode=None,
-    shuffle=False)
+    engine.setProperty('rate', 150)  # Change the rate to adjust the speed of speech
 
-# Make predictions on the validation data
-predictions = model.predict(validation_generator, steps=len(validation_generator), verbose=1)
+    # Set the voice properties (optional)
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[0].id)  # Change the index to switch voices
 
-# Convert the predictions to class labels
-predicted_classes = np.argmax(predictions, axis=1)
+    # Say the text
+    engine.say(phrase)
 
-# Get the class indices
-class_indices = validation_generator.class_indices
+    # Run the engine and wait for the speech to finish
+    engine.runAndWait()
 
-# Invert the class indices to get a mapping from class indices to class labels
-class_labels = {v: k for k, v in class_indices.items()}
 
-correct = 0
+def capture_image():
+    # Capture a frame from the camera
+    ret, frame = cap.read()
 
-# Print the class labels for each image
-for i, image_path in enumerate(validation_generator.filepaths):
-    if (image_path.split("\\")[-1]).split(" ")[0] == class_labels[predicted_classes[i]]:
-        correct +=1
-    print(f"Image {i + 1}: {image_path}, Class Label: {class_labels[predicted_classes[i]]}")
+    # Display the captured frame
+    cv2.imshow('frame', frame)
 
-print(f"Total correct: {correct}")
+    # Check for user input to capture the image
+    if cv2.waitKey(1) & 0xFF == ord('c'):
+        # Save the captured image
+        cv2.imwrite('image_to_predict.jpg', frame)
+        # close the window
+        cv2.destroyAllWindows()
+        return True
+    else:
+        return False
+
+
+def predict_value(model):
+    # Create a Pandas DataFrame containing the path of the image to predict
+    image_path = "image_to_predict.jpg"
+    data = pd.DataFrame({'filename': [image_path]})
+
+    predict_datagen = ImageDataGenerator(rescale=1. / 255)
+    predict_generator = predict_datagen.flow_from_dataframe(
+        data,
+        x_col='filename',
+        y_col=None,
+        class_mode=None,
+        target_size=(512, 512),
+        batch_size=1,
+        shuffle=False,
+        preprocessing_function=lambda x: x / 255.0 - 0.5
+    )
+
+    # Make predictions on the image to predict
+    predictions = model.predict(predict_generator, steps=len(predict_generator), verbose=1)
+
+    # Convert the predictions to class labels
+    predicted_class_index = np.argmax(predictions)
+
+    classes = ["100", "1000", "20", "50", "500", "5000"]
+    value = classes[predicted_class_index]
+
+    return value
+
+
+value = 0
+
+
+def main():
+    global value
+    # Start the prediction loop
+    while True:
+        # Capture an image from the camera
+        if not capture_image():
+            continue
+        else:
+            # Predict the value of the captured image
+            value = predict_value(model)
+
+            # Speak out the value
+            voice_out(value)
+            break
+
+
+def get_value():
+    return value
