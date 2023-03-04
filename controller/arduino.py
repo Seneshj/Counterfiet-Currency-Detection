@@ -16,6 +16,7 @@ def uv_off():
     ser.write(b'x')
 
 
+
 # while True:
 #     # Read the value from the serial port and print it to the console
 #     ldrValue = ser.readline().decode('utf-8').rstrip()
@@ -27,4 +28,3 @@ def uv_off():
 #         ser.write(b's')
 #     elif command == 'x':
 #         ser.write(b'x')
-
