@@ -1,52 +1,12 @@
 from keras.models import load_model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-import pyttsx3
-import cv2
 import pandas as pd
 import numpy as np
-
-# Initialize the camera
-print(">> Getting the camera ready >>")
-cap = cv2.VideoCapture(0)
+import utility
 
 print(">> Loading model >>")
 # Load the saved models
 model = load_model("C:\\Users\\yohan\\OneDrive\\Desktop\\models\\latest_inceptionv3.h5")
-
-
-def voice_out(phrase):
-    # Initialize the engine
-    engine = pyttsx3.init()
-
-    engine.setProperty('rate', 150)  # Change the rate to adjust the speed of speech
-
-    # Set the voice properties (optional)
-    voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[0].id)  # Change the index to switch voices
-
-    # Say the text
-    engine.say(phrase)
-
-    # Run the engine and wait for the speech to finish
-    engine.runAndWait()
-
-
-def capture_image():
-    # Capture a frame from the camera
-    ret, frame = cap.read()
-
-    # Display the captured frame
-    cv2.imshow('frame', frame)
-
-    # Check for user input to capture the image
-    if cv2.waitKey(1) & 0xFF == ord('c'):
-        # Save the captured image
-        cv2.imwrite('image_to_predict.jpg', frame)
-        # close the window
-        cv2.destroyAllWindows()
-        return True
-    else:
-        return False
 
 
 def predict_value(model):
@@ -86,14 +46,14 @@ def main():
     # Start the prediction loop
     while True:
         # Capture an image from the camera
-        if not capture_image():
+        if not utility.capture_image("image_to_predict"):
             continue
         else:
             # Predict the value of the captured image
             value = predict_value(model)
 
             # Speak out the value
-            voice_out(value)
+            utility.voice_out(value)
             break
 
 
