@@ -22,7 +22,7 @@ def fake_classifier(note_value):
             model = keras.models.load_model('../model/weights/fake-' + str(note_value) + '.h5')
             yhat = model.predict(np.expand_dims(resized / 255, 0))
             # returns a string saying real or fake
-            if yhat[0] > 0.5:
+            if yhat[0] > 0.99:
                 arduino.uv_off()
                 return 'Real'
             else:
