@@ -16,3 +16,25 @@ for video_file in video_files:
     # Initialize a frame counter
     frame_count = 0
 
+    # Loop through each frame of the video
+    while cap.isOpened():
+        # Read the next frame from the video
+        ret, frame = cap.read()
+
+        # Check if a frame was successfully read
+        if not ret:
+            break
+
+        # Save the frame as an image file
+        cv2.imwrite(f"{video_file}_frame_{frame_count}.jpg", frame)
+
+        # Increment the frame counter
+        frame_count += 1
+
+    # Release the video file
+    cap.release()
+
+# Close all windows
+cv2.destroyAllWindows()
+
+
