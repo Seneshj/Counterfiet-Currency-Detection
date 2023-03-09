@@ -18,6 +18,9 @@ def calculate_sum_of_notes():
         sum_of_notes += float(note_value) # Add the note value to the total sum
     return sum_of_notes, notes
 
+def get_sum_of_notes():
+    return sum_of_notes
+
 
 
 
