@@ -21,6 +21,9 @@ def calculate_sum_of_notes():
 def get_sum_of_notes():
     return sum_of_notes
 
+def get_notes():
+    return notes
+
 
 
 
