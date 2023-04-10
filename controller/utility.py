@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import pyttsx3
 
@@ -44,17 +46,38 @@ def change_volume():
 
 
 def capture_image(name):
-    voice_out("Currency detected, now scanning")
-    # Capture a frame from the camera
-    ret, frame = cap.read()
 
-    # Display the captured frame
-    # cv2.imshow('frame', frame)
+    for i in range(2):
+        # Capture a frame from the camera
+        ret, frame = cap.read()
+
+        # Display the captured frame
+        cv2.imshow('frame', frame)
 
     # Check for user input to capture the image
     if cv2.waitKey(5000):
         # Save the captured image
         cv2.imwrite(f'{name}.jpg', frame)
+        cv2.destroyAllWindows()
+        return True
+    else:
+        return False
+
+
+def capture_fake():
+    voice_out("Currency detected, now scanning")
+
+    for i in range(2):
+        # Capture a frame from the camera
+        ret, frame = cap.read()
+
+        # Display the captured frame
+        cv2.imshow('frame', frame)
+
+    # Check for user input to capture the image
+    if cv2.waitKey(1):
+        # Save the captured image
+        cv2.imwrite(f'{"uv"}.jpg', frame)
         cv2.destroyAllWindows()
         return True
     else:

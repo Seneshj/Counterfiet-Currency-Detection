@@ -14,6 +14,6 @@ def detect_note():
         resized = tf.image.resize(frame, (256, 256))
         yhat = model.predict(np.expand_dims(resized / 255, 0))
         if yhat < 0.5:
+            utility.voice_out("Currency detected, now scanning")
             return True
-    cap.release()
     cv2.destroyAllWindows()

@@ -1,3 +1,5 @@
+import time
+
 import identify_note as note
 import fake_classifier as f
 import detect_note as dn
@@ -17,12 +19,15 @@ while True:
     if option == 1:
         if dn.detect_note():
             note.main()
+            utility.voice_out(note.value)
     elif option == 2:
         if dn.detect_note():
             coin.main()
+            utility.voice_out(coin.value)
     elif option == 3:
         if dn.detect_note():
             note.main()
+            time.sleep(4)
             utility.voice_out(f.fake_classifier(note.get_value()))
     elif option == 4:
         sumup.calculate_sum_of_notes()
