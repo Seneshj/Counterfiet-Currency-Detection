@@ -6,12 +6,12 @@ import utility
 
 print(">> Loading model >>")
 # Load the saved models
-model = load_model("C:\\Users\\yohan\\OneDrive\\Desktop\\models\\latest_inceptionv3.h5")
+model = load_model("C:\\Users\\yohan\\OneDrive\\Desktop\\models\\latest_coin_InceptionV3.h5")
 
 
 def predict_value(model):
     # Create a Pandas DataFrame containing the path of the image to predict
-    image_path = "image_to_predict.jpg"
+    image_path = "coin_to_predict.jpg"
     data = pd.DataFrame({'filename': [image_path]})
 
     predict_datagen = ImageDataGenerator(rescale=1. / 255)
@@ -32,7 +32,7 @@ def predict_value(model):
     # Convert the predictions to class labels
     predicted_class_index = np.argmax(predictions)
 
-    classes = ["100", "1000", "20", "50", "500", "5000"]
+    classes = ["1", "5", "2", "10"]
     value = classes[predicted_class_index]
 
     return value
@@ -46,16 +46,14 @@ def main():
     # Start the prediction loop
     while True:
         # Capture an image from the camera
-        if not utility.capture_image("image_to_predict"):
+        if not utility.capture_image("coin_to_predict"):
             continue
         else:
             # Predict the value of the captured image
             value = predict_value(model)
-
-            # Speak out the value
-            utility.voice_out(value)
             break
 
 
 def get_value():
     return value
+
